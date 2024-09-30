@@ -28,5 +28,5 @@ export const messages = pgTable("messages", {
   title: varchar("title", { length: 30 }).notNull(),
   content: text("content").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-  isDeleted: boolean("isDeleted").default(false),
+  isDeleted: boolean("isDeleted").default(false).notNull(),
 });

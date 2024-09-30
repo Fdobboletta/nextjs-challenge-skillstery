@@ -24,7 +24,6 @@ export const metadata: Metadata = {
 };
 
 const publicNavBarOptions = [
-  { label: "Home", path: "/" },
   { label: "Login", path: routePaths.login },
   { label: "Register", path: routePaths.register },
 ];
@@ -49,9 +48,7 @@ export const RootLayout = async ({
         <Navbar options={navBarOptions} />
         <div className="flex min-h-screen">
           {isLoggedIn && <SideBar />}
-          <main className="flex-1 flex justify-center items-center">
-            {children}
-          </main>
+          <main className="flex-1 flex justify-center">{children}</main>
         </div>
       </body>
     </html>

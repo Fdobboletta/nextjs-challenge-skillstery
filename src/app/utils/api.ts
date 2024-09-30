@@ -1,3 +1,5 @@
+import { headers } from "next/headers";
+
 type FetchOptions = {
   path: string;
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
@@ -11,9 +13,7 @@ export const apiFetch = async <T>({
 }: FetchOptions): Promise<T> => {
   const res = await fetch(path, {
     method,
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: headers(),
     body: body ? JSON.stringify(body) : undefined,
   });
 

@@ -3,6 +3,7 @@ import { AuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "@/lib/db";
+import { routePaths } from "@/app/routePaths";
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -44,7 +45,7 @@ export const authOptions: AuthOptions = {
       },
     }),
   ],
-  pages: { signIn: "/auth/login" },
+  pages: { signIn: routePaths.login },
 };
 
 const handler = NextAuth(authOptions);

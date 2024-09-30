@@ -11,7 +11,7 @@ type NavBarProps = {
 
 const Navbar = async (props: NavBarProps) => {
   return (
-    <nav className="flex justify-between items-center bg-gray-950 text-white px-24 py-3">
+    <nav className="flex justify-between items-center bg-gray-950 text-white px-24 py-3 pl-8">
       <h1 className="text-xl font-bold">Message App</h1>
 
       <ul className="flex gap-x-2">

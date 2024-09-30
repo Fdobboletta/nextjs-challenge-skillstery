@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { getServerSession } from "next-auth";
 import "./globals.css";
 import Navbar from "@/components/NavBar";
-import { getServerSession } from "next-auth";
+import SideBar from "@/components/SideBar";
 import { authOptions } from "./api/auth/[...nextauth]/route";
+import { routePaths } from "./routePaths";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -23,14 +25,11 @@ export const metadata: Metadata = {
 
 const publicNavBarOptions = [
   { label: "Home", path: "/" },
-  { label: "Login", path: "/auth/login" },
-  { label: "Register", path: "/auth/register" },
+  { label: "Login", path: routePaths.login },
+  { label: "Register", path: routePaths.register },
 ];
 
-const userNavBarOptions = [
-  { label: "Profile", path: "/userProfile" },
-  { label: "Logout", path: "/api/auth/signout" },
-];
+const userNavBarOptions = [{ label: "Logout", path: routePaths.signOut }];
 
 export const RootLayout = async ({
   children,
@@ -38,9 +37,9 @@ export const RootLayout = async ({
   children: React.ReactNode;
 }>) => {
   const session = await getServerSession(authOptions);
+  const isLoggedIn = session && session.user;
 
-  const navBarOptions =
-    session && session.user ? userNavBarOptions : publicNavBarOptions;
+  const navBarOptions = isLoggedIn ? userNavBarOptions : publicNavBarOptions;
 
   return (
     <html lang="en">
@@ -48,7 +47,12 @@ export const RootLayout = async ({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Navbar options={navBarOptions} />
-        {children}
+        <div className="flex min-h-screen">
+          {isLoggedIn && <SideBar />}
+          <main className="flex-1 flex justify-center items-center">
+            {children}
+          </main>
+        </div>
       </body>
     </html>
   );

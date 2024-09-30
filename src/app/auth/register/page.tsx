@@ -1,9 +1,10 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { apiFetch } from "@/app/utils/api";
-import { InputField } from "@/components/InputField";
 import { useRouter } from "next/navigation";
+import { apiFetch } from "@/app/utils/api";
 import { RegisterUserResponse } from "@/app/api/auth/register/types";
+import { routePaths } from "@/app/routePaths";
+import { InputField } from "@/components/InputField";
 
 type RegisterFormFields = {
   email: string;
@@ -39,7 +40,7 @@ const RegisterPage = () => {
     });
 
     if (newUser) {
-      router.push("/auth/login");
+      router.push(routePaths.login);
     }
   });
 

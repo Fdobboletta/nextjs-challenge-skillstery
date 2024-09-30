@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import { InputField } from "@/components/InputField";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { routePaths } from "@/app/routePaths";
 
 type LoginFormFields = {
   email: string;
@@ -31,7 +32,7 @@ const LoginPage = () => {
     if (res && res.error) {
       setError(res.error);
     } else {
-      router.push("/userProfile");
+      router.push(routePaths.inbox);
       router.refresh();
     }
   });

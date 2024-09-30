@@ -1,18 +1,18 @@
-type Sender = {
+type Receiver = {
   id: number;
   firstName: string;
   lastName: string;
   email: string;
 };
 
-type InboxMessage = {
+type SentMessage = {
   id: number;
   createdAt: Date;
-  receiverId: number;
+  senderId: number;
   title: string;
   content: string;
   isDeleted: boolean;
-  sender: Sender;
+  receiver: Receiver;
 };
 
-export type GetInboxMessagesResponse = InboxMessage[];
+export type GetSentMessagesResponse = SentMessage[];

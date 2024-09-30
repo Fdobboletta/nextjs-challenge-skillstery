@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   pgTable,
   text,
@@ -8,6 +9,7 @@ import {
   integer,
 } from "drizzle-orm/pg-core";
 
+// Tables
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   firstName: text("firstName").notNull(),
@@ -22,7 +24,7 @@ export const messages = pgTable("messages", {
   senderId: integer("senderId")
     .references(() => users.id)
     .notNull(),
-  recipientId: integer("recipientId")
+  receiverId: integer("receiverId")
     .references(() => users.id)
     .notNull(),
   title: varchar("title", { length: 30 }).notNull(),
@@ -30,3 +32,20 @@ export const messages = pgTable("messages", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   isDeleted: boolean("isDeleted").default(false).notNull(),
 });
+
+// Relations
+export const userRelations = relations(users, ({ many }) => ({
+  sentMessages: many(messages, { relationName: "senderId" }),
+  receivedMessages: many(messages, { relationName: "receiverId" }),
+}));
+
+export const postsRelations = relations(messages, ({ one }) => ({
+  sender: one(users, {
+    fields: [messages.senderId],
+    references: [users.id],
+  }),
+  receiver: one(users, {
+    fields: [messages.receiverId],
+    references: [users.id],
+  }),
+}));

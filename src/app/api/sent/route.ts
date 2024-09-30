@@ -9,18 +9,15 @@ export const GET = async () => {
 
     const inboxMessages = await db.query.messages.findMany({
       columns: {
-        senderId: false,
+        receiverId: false,
       },
       with: {
-        sender: {
-          columns: {
-            password: false,
-            createdAt: false,
-          },
+        receiver: {
+          columns: { password: false, createdAt: false },
         },
       },
       where: (message, { eq, and }) =>
-        and(eq(message.receiverId, userId), eq(message.isDeleted, false)),
+        and(eq(message.senderId, userId), eq(message.isDeleted, false)),
     });
 
     return NextResponse.json(inboxMessages);

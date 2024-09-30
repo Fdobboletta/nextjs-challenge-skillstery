@@ -16,7 +16,7 @@ const Navbar = async (props: NavBarProps) => {
 
       <ul className="flex gap-x-2">
         {props.options.map((option) => (
-          <li>
+          <li key={option.path}>
             <Link href={option.path}>{option.label}</Link>
           </li>
         ))}

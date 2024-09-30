@@ -24,23 +24,27 @@ const RegisterPage = () => {
   const router = useRouter();
 
   const onSubmit = handleSubmit(async (formData) => {
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match");
-    }
+    try {
+      if (formData.password !== formData.confirmPassword) {
+        alert("Passwords don't match");
+      }
 
-    const newUser = await apiFetch<RegisterUserResponse>({
-      path: "/api/auth/register",
-      method: "POST",
-      body: {
-        email: formData.email,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        password: formData.password,
-      },
-    });
+      const newUser = await apiFetch<RegisterUserResponse>({
+        path: "/api/auth/register",
+        method: "POST",
+        body: {
+          email: formData.email,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          password: formData.password,
+        },
+      });
 
-    if (newUser) {
-      router.push(routePaths.login);
+      if (newUser) {
+        router.push(routePaths.login);
+      }
+    } catch (error: any) {
+      console.error(error.message);
     }
   });
 

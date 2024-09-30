@@ -15,6 +15,13 @@
       "when": 1727706119330,
       "tag": "0001_chilly_tempest",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1727717287530,
+      "tag": "0002_nappy_tomas",
+      "breakpoints": true
     }
   ]
 }

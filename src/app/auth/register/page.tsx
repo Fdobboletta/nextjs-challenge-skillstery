@@ -43,8 +43,10 @@ const RegisterPage = () => {
       if (newUser) {
         router.push(routePaths.login);
       }
-    } catch (error: any) {
-      console.error(error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      }
     }
   });
 

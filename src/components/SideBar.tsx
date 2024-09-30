@@ -23,12 +23,12 @@ const Sidebar = () => {
           <li key={option.path}>
             <Link
               href={option.path}
-              className={`hover:text-gray-400 ${
+              className={`flex items-center p-3 rounded-md transition-all duration-200 ${
                 currentPath === option.path ? "font-bold text-gray-300" : ""
-              }${
+              } ${
                 option.path === routePaths.newMessage
-                  ? "bg-stone-50 text-black"
-                  : ""
+                  ? "bg-green-600 text-white hover:bg-green-700"
+                  : "hover:bg-gray-800"
               }`}
             >
               {option.label}

@@ -3,9 +3,7 @@ import { db } from "@/lib/db";
 import { checkUserAuthOrThrow } from "../utils/checkUserAuthOrThrow";
 export const GET = async () => {
   try {
-    const session = await checkUserAuthOrThrow();
-    // Convert the user ID to a number since its stored as string by Next-Auth.
-    const userId = Number(session.user.id);
+    const { userId } = await checkUserAuthOrThrow();
 
     const inboxMessages = await db.query.messages.findMany({
       columns: {
@@ -24,7 +22,9 @@ export const GET = async () => {
     });
 
     return NextResponse.json(inboxMessages);
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error) {
+    if (error instanceof Error) {
+      return NextResponse.json({ message: error.message }, { status: 500 });
+    }
   }
 };

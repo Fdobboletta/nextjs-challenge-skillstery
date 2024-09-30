@@ -7,8 +7,10 @@ export const SentPage = async () => {
   return (
     <MessageList
       title={"Sent"}
+      prefix="TO"
       messages={messagesForDisplay}
       emptyListLabel="You do not have sent messages yet."
+      canDelete={false}
     />
   );
 };

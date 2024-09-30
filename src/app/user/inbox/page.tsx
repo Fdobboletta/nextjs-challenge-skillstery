@@ -8,8 +8,10 @@ export const InboxPage = async () => {
   return (
     <MessageList
       title="Inbox"
+      prefix="FROM"
       messages={messagesForDisplay}
       emptyListLabel="Your inbox is empty"
+      canDelete
     />
   );
 };

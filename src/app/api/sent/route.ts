@@ -3,9 +3,7 @@ import { db } from "@/lib/db";
 import { checkUserAuthOrThrow } from "../utils/checkUserAuthOrThrow";
 export const GET = async () => {
   try {
-    const session = await checkUserAuthOrThrow();
-    // Convert the user ID to a number since its stored as string by Next-Auth.
-    const userId = Number(session.user.id);
+    const { userId } = await checkUserAuthOrThrow();
 
     const inboxMessages = await db.query.messages.findMany({
       columns: {
@@ -16,12 +14,14 @@ export const GET = async () => {
           columns: { password: false, createdAt: false },
         },
       },
-      where: (message, { eq, and }) =>
-        and(eq(message.senderId, userId), eq(message.isDeleted, false)),
+      // We want to return the message regardless of whether the author has already deleted it.
+      where: (message, { eq, and }) => and(eq(message.senderId, userId)),
     });
 
     return NextResponse.json(inboxMessages);
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error) {
+    if (error instanceof Error) {
+      return NextResponse.json({ message: error.message }, { status: 500 });
+    }
   }
 };

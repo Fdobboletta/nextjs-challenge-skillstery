@@ -8,7 +8,7 @@ export const POST = async (request: NextRequest) => {
   try {
     const requestBody: CreateMessageReqBody = await request.json();
 
-    const session = await checkUserAuthOrThrow();
+    const { userId } = await checkUserAuthOrThrow();
 
     const { title, content, receiverEmail } = requestBody;
 
@@ -19,9 +19,6 @@ export const POST = async (request: NextRequest) => {
     });
 
     if (!receiverUser) throw new Error("Receiver user not found");
-
-    // Convert the user ID to a number since its stored as string by Next-Auth.
-    const userId = Number(session.user.id);
 
     if (userId === receiverUser.id)
       throw new Error("You are not allowed to send messages to yourself");
@@ -37,7 +34,9 @@ export const POST = async (request: NextRequest) => {
       .returning();
 
     return NextResponse.json(newMessage[0]);
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error) {
+    if (error instanceof Error) {
+      return NextResponse.json({ message: error.message }, { status: 500 });
+    }
   }
 };

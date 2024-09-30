@@ -1,10 +1,3 @@
-type Sender = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-};
-
 type InboxMessage = {
   id: number;
   createdAt: Date;
@@ -12,7 +5,12 @@ type InboxMessage = {
   title: string;
   content: string;
   isDeleted: boolean;
-  sender: Sender;
+  sender: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
 };
 
 export type GetInboxMessagesResponse = InboxMessage[];

@@ -1,10 +1,3 @@
-type Receiver = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-};
-
 type SentMessage = {
   id: number;
   createdAt: Date;
@@ -12,7 +5,12 @@ type SentMessage = {
   title: string;
   content: string;
   isDeleted: boolean;
-  receiver: Receiver;
+  receiver: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
 };
 
 export type GetSentMessagesResponse = SentMessage[];

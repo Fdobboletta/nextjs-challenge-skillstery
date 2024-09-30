@@ -58,10 +58,7 @@ export const MessageList = (props: MessageListProps) => {
           props.messages.map((message) => (
             <li key={message.id}>
               <div className="p-4 border border-gray-300 rounded-md hover:bg-gray-500 flex justify-between items-center">
-                <Link
-                  href={`${routePaths.inbox}/${message.id}`}
-                  className="flex-1"
-                >
+                <Link href={`/user/message/${message.id}`} className="flex-1">
                   <div>
                     <span className="font-semibold">{displayPrefix}</span>
                     <span>{message.userName}</span>

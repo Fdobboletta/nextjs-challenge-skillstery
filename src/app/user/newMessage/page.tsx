@@ -1,4 +1,4 @@
-import { NewMessageForm, NewMessageFormFields } from "./newMessageForm";
+import { NewMessageForm } from "./newMessageForm";
 
 const NewMessagePage = () => {
   // TODO: Fetch users here and pass it down by props to make receiver form field type ahead

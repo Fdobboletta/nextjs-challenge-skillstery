@@ -8,7 +8,7 @@ export const fetchInboxMessages = async () => {
       (await apiFetch<GetInboxMessagesResponse>({
         path: `${process.env.NEXT_PUBLIC_BASE_URL}/api/inbox/`,
         method: "GET",
-        headers: headers(),
+        headers: new Headers(headers()),
       })) || [];
 
     if (error) {

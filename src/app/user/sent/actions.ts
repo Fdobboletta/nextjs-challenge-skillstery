@@ -8,7 +8,7 @@ export const fetchSentMessages = async () => {
       await apiFetch<GetSentMessagesResponse>({
         path: `${process.env.NEXT_PUBLIC_BASE_URL}/api/sent/`,
         method: "GET",
-        headers: headers(),
+        headers: new Headers(headers()),
       });
 
     if (error) {

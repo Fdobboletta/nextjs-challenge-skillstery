@@ -7,7 +7,7 @@ export const fetchMessageById = async (messageId: number) => {
     const { data: messageFromApi, error } = await apiFetch<GetMessageResponse>({
       path: `${process.env.NEXT_PUBLIC_BASE_URL}/api/message/${messageId}`,
       method: "GET",
-      headers: headers(),
+      headers: new Headers(headers()),
     });
     if (error) {
       console.error(error);

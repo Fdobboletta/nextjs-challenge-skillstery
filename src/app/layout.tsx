@@ -6,6 +6,7 @@ import Navbar from "@/components/NavBar";
 import SideBar from "@/components/SideBar";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import { routePaths } from "./routePaths";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,6 +31,12 @@ const publicNavBarOptions = [
 
 const userNavBarOptions = [{ label: "Logout", path: routePaths.signOut }];
 
+const sidebarOptions = [
+  { label: "Inbox", path: routePaths.inbox },
+  { label: "Sent", path: routePaths.sent },
+  { label: "Create New Message", path: routePaths.newMessage },
+];
+
 export const RootLayout = async ({
   children,
 }: Readonly<{
@@ -45,10 +52,11 @@ export const RootLayout = async ({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar options={navBarOptions} />
+        <Navbar options={navBarOptions} userEmail={session?.user?.email} />
         <div className="flex min-h-screen">
-          {isLoggedIn && <SideBar />}
+          {isLoggedIn && <SideBar options={sidebarOptions} />}
           <main className="flex-1 flex justify-center">{children}</main>
+          <Toaster position="bottom-right" />
         </div>
       </body>
     </html>

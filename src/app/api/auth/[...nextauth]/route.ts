@@ -21,7 +21,7 @@ export const authOptions: AuthOptions = {
           placeholder: "******",
         },
       },
-      authorize: async (credentials, req) => {
+      authorize: async (credentials) => {
         if (!credentials) throw new Error("Missing credentials");
 
         const user = await db.query.users.findFirst({

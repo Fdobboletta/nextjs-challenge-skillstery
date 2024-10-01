@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { checkUserAuthOrThrow } from "../utils/checkUserAuthOrThrow";
+
+// Fetch messages from the "Sent" section for the authenticated user.
+// This includes all messages sent by the user, regardless of their deletion status.
 export const GET = async () => {
   try {
     const { userId } = await checkUserAuthOrThrow();
@@ -16,12 +19,14 @@ export const GET = async () => {
       },
       // We want to return the message regardless of whether the author has already deleted it.
       where: (message, { eq, and }) => and(eq(message.senderId, userId)),
+      orderBy: (message, { desc }) => desc(message.createdAt),
     });
 
     return NextResponse.json(inboxMessages);
   } catch (error) {
-    if (error instanceof Error) {
-      return NextResponse.json({ message: error.message }, { status: 500 });
-    }
+    return NextResponse.json(
+      { error: (error as Error).message || "Failed to fetch messages" },
+      { status: 500 }
+    );
   }
 };

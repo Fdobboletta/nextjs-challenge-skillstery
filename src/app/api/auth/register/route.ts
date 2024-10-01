@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
 import { RegisterUserReqBody } from "./types";
 
+// Handles user registration by creating a new user in the database
 export const POST = async (request: NextRequest) => {
   try {
     const requestBody: RegisterUserReqBody = await request.json();
@@ -20,6 +21,7 @@ export const POST = async (request: NextRequest) => {
     }
 
     const hashedPassword = await bcrypt.hash(requestBody.password, 10);
+
     const newUser = await db
       .insert(users)
       .values({

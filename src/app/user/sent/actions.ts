@@ -1,15 +1,22 @@
 import { GetSentMessagesResponse } from "@/app/api/sent/types";
 import { apiFetch } from "@/app/utils/api";
 import { headers } from "next/headers";
+import toast from "react-hot-toast";
 
 export const fetchSentMessages = async () => {
   try {
-    const messagesFromApi =
-      (await apiFetch<GetSentMessagesResponse>({
+    const { data: messagesFromApi, error } =
+      await apiFetch<GetSentMessagesResponse>({
         path: `${process.env.NEXT_PUBLIC_BASE_URL}/api/sent/`,
         method: "GET",
         headers: headers(),
-      })) || [];
+      });
+
+    if (error) {
+      toast.error(error);
+    }
+
+    if (messagesFromApi === undefined) return [];
 
     return messagesFromApi.map((message) => ({
       id: message.id,
@@ -18,7 +25,10 @@ export const fetchSentMessages = async () => {
       userEmail: message.receiver.email,
     }));
   } catch (error) {
-    console.error("Error fetching sent messages:", error);
+    if (error instanceof Error) {
+      toast.error(error.message);
+    }
+
     return [];
   }
 };

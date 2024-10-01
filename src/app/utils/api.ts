@@ -5,25 +5,36 @@ type FetchOptions = {
   headers?: HeadersInit;
 };
 
-export const apiFetch = async <T>({
+type ApiResponse<T> = {
+  data?: T;
+  error?: string;
+};
+
+export const apiFetch = async <T = unknown>({
   path,
   method,
   body,
   headers,
-}: FetchOptions): Promise<T> => {
-  const res = await fetch(path, {
-    method,
-    headers: headers ?? {
-      "Content-Type": "application/json",
-    },
-    credentials: "include", // This value ensures cookies are sent from client components
-    body: body ? JSON.stringify(body) : undefined,
-  });
+}: FetchOptions): Promise<ApiResponse<T>> => {
+  try {
+    const res = await fetch(path, {
+      method,
+      headers: headers ?? {
+        "Content-Type": "application/json",
+      },
+      credentials: "include", // This value ensures cookies are sent from client components
+      body: body ? JSON.stringify(body) : undefined,
+    });
 
-  if (!res.ok) {
-    const errorMessage = await res.text();
-    throw new Error(`Error ${res.status}: ${errorMessage}`);
+    if (!res.ok) {
+      const errorMessage = await res.text();
+      return { error: `Error ${res.status}: ${errorMessage}` };
+    }
+
+    const data = await res.json();
+    return { data };
+  } catch (error) {
+    // Handle network or other unexpected errors
+    return { error: (error as Error).message || "Something went wrong" };
   }
-
-  return await res.json();
 };

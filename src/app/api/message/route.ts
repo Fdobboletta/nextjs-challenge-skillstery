@@ -4,24 +4,41 @@ import { messages } from "@/lib/schema";
 import { checkUserAuthOrThrow } from "../utils/checkUserAuthOrThrow";
 import { CreateMessageReqBody } from "./types";
 
+// Handles the creation of a new message to be sent
 export const POST = async (request: NextRequest) => {
   try {
     const requestBody: CreateMessageReqBody = await request.json();
-
     const { userId } = await checkUserAuthOrThrow();
-
     const { title, content, receiverEmail } = requestBody;
 
-    if (title.length > 29) throw new Error("Title exceeds max allowed length");
+    // Check if title exceeds length
+    if (title.length > 29) {
+      return NextResponse.json(
+        { error: "Title exceeds max allowed length" },
+        { status: 400 }
+      );
+    }
 
+    // Find the receiver user
     const receiverUser = await db.query.users.findFirst({
       where: (users, { eq }) => eq(users.email, receiverEmail),
     });
 
-    if (!receiverUser) throw new Error("Receiver user not found");
+    // If the receiver is not found
+    if (!receiverUser) {
+      return NextResponse.json(
+        { error: "Receiver user not found" },
+        { status: 404 }
+      );
+    }
 
-    if (userId === receiverUser.id)
-      throw new Error("You are not allowed to send messages to yourself");
+    // Prevent users from messaging themselves
+    if (userId === receiverUser.id) {
+      return NextResponse.json(
+        { error: "You are not allowed to send messages to yourself" },
+        { status: 403 }
+      );
+    }
 
     const newMessage = await db
       .insert(messages)
@@ -35,8 +52,9 @@ export const POST = async (request: NextRequest) => {
 
     return NextResponse.json(newMessage[0]);
   } catch (error) {
-    if (error instanceof Error) {
-      return NextResponse.json({ message: error.message }, { status: 500 });
-    }
+    return NextResponse.json(
+      { error: (error as Error).message || "Internal Server Error" },
+      { status: 500 }
+    );
   }
 };

@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkUserAuthOrThrow } from "../../utils/checkUserAuthOrThrow";
 import { db } from "@/lib/db";
 import { messages } from "@/lib/schema";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
+// Handles the soft deletion of a message
 export const PATCH = async (
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -13,10 +14,16 @@ export const PATCH = async (
 
     const messageIdFromParam = Number(params.id);
 
+    // To delete a message, the request must come from the sender (creator) of the message.
     const updatedMessage = await db
       .update(messages)
       .set({ isDeleted: true })
-      .where(eq(messages.id, messageIdFromParam))
+      .where(
+        and(
+          eq(messages.id, messageIdFromParam),
+          eq(messages.receiverId, userId)
+        )
+      )
       .returning();
 
     if (updatedMessage.length === 0) {
@@ -28,15 +35,13 @@ export const PATCH = async (
       isDeleted: updatedMessage[0].isDeleted,
     });
   } catch (error) {
-    console.error("Error updating message:", error);
-
-    return NextResponse.json(
-      { error: "An error occurred while updating the message" },
-      { status: 500 }
-    );
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
   }
 };
 
+// Fetches a message by its ID
 export const GET = async (
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -46,6 +51,9 @@ export const GET = async (
 
     const messageIdFromParam = Number(params.id);
 
+    // Fetch a message if:
+    // - It is not marked as deleted
+    // - The user is either the sender or the receiver
     const requestedMessage = await db.query.messages.findFirst({
       columns: {
         id: true,
@@ -62,8 +70,12 @@ export const GET = async (
           },
         },
       },
-      where: (message, { eq, and }) =>
-        and(eq(message.id, messageIdFromParam), eq(message.isDeleted, false)),
+      where: (message, { eq, and, or }) =>
+        and(
+          eq(message.id, messageIdFromParam),
+          eq(message.isDeleted, false),
+          or(eq(message.senderId, userId), eq(message.receiverId, userId))
+        ),
     });
 
     if (!requestedMessage) {
@@ -72,11 +84,8 @@ export const GET = async (
 
     return NextResponse.json(requestedMessage);
   } catch (error) {
-    console.error("Error updating message:", error);
-
-    return NextResponse.json(
-      { error: "An error occurred while updating the message" },
-      { status: 500 }
-    );
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
   }
 };

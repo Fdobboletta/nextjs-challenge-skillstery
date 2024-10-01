@@ -11,6 +11,8 @@ const ReadMessagePage: NextPage<{ params: { id: string } }> = async ({
     return <div className="text-center text-red-500">Message not found</div>;
   }
 
+  console.log("message", message);
+
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md max-h-[600px] overflow-auto">
       <div className="border-b pb-4 mb-6">

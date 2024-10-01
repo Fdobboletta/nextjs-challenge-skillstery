@@ -3,6 +3,7 @@ import { CreateMessageResponse } from "@/app/api/message/types";
 import { apiFetch } from "@/app/utils/api";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 export type NewMessageFormFields = {
   receiverEmail: string;
@@ -21,22 +22,35 @@ export const NewMessageForm = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const res = await apiFetch<CreateMessageResponse>({
-        path: `${process.env.NEXT_PUBLIC_BASE_URL}/api/message/`,
-        method: "POST",
-        body: data,
-      });
-      if (res) {
-        alert("Message sent");
+      // Check internet connection before sending a message
+      if (!navigator.onLine) {
+        toast.error(
+          "You are not connected to the internet. Please check your network."
+        );
+        return;
+      }
+
+      const { data: newMessage, error } = await apiFetch<CreateMessageResponse>(
+        {
+          path: `${process.env.NEXT_PUBLIC_BASE_URL}/api/message/`,
+          method: "POST",
+          body: data,
+        }
+      );
+      if (error) {
+        toast.error(error);
+        return;
+      }
+      if (newMessage) {
+        toast.success("Your message has been sent!");
         router.push("/user/sent");
       }
     } catch (error) {
       if (error instanceof Error) {
         if (error.message === "Receiver user not found") {
-          alert("Receiver user does not exist");
+          toast.error("Receiver user does not exist");
         }
-        console.error(error.message);
-        alert("Your message haven not been send due to an error");
+        toast.error("Failed to send your message. Please try again.");
       }
     }
   });

@@ -1,9 +1,9 @@
 "use client";
 import { PatchMessageResponse } from "@/app/api/message/[id]/types";
-import { routePaths } from "@/app/routePaths";
 import { apiFetch } from "@/app/utils/api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 type Messages = {
   id: number;
@@ -28,16 +28,23 @@ export const MessageList = (props: MessageListProps) => {
   // TODO: Add confirmation modal
   const handleDeleteMessage = async (messageId: number) => {
     try {
-      const updatedMessage = await apiFetch<PatchMessageResponse>({
-        path: `${process.env.NEXT_PUBLIC_BASE_URL}/api/message/${messageId}`,
-        method: "PATCH",
-      });
-      if (updatedMessage.isDeleted) {
+      const { data: updatedMessage, error } =
+        await apiFetch<PatchMessageResponse>({
+          path: `${process.env.NEXT_PUBLIC_BASE_URL}/api/message/${messageId}`,
+          method: "PATCH",
+        });
+
+      if (error) {
+        toast.error(error);
+        return;
+      }
+      if (updatedMessage) {
+        toast.success("Your message has been successfully deleted!");
         router.refresh();
       }
     } catch (error) {
       if (error instanceof Error) {
-        console.error(error.message);
+        toast.error(error.message);
       }
     }
   };

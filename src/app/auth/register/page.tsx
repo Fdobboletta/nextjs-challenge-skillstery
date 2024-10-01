@@ -5,6 +5,7 @@ import { apiFetch } from "@/app/utils/api";
 import { RegisterUserResponse } from "@/app/api/auth/register/types";
 import { routePaths } from "@/app/routePaths";
 import { InputField } from "@/components/InputField";
+import toast from "react-hot-toast";
 
 type RegisterFormFields = {
   email: string;
@@ -29,7 +30,7 @@ const RegisterPage = () => {
         alert("Passwords don't match");
       }
 
-      const newUser = await apiFetch<RegisterUserResponse>({
+      const { data: newUser, error } = await apiFetch<RegisterUserResponse>({
         path: "/api/auth/register",
         method: "POST",
         body: {
@@ -40,12 +41,17 @@ const RegisterPage = () => {
         },
       });
 
+      if (error) {
+        toast.error(error);
+        return;
+      }
+
       if (newUser) {
         router.push(routePaths.login);
       }
     } catch (error) {
       if (error instanceof Error) {
-        console.error(error.message);
+        toast.error(error.message);
       }
     }
   });

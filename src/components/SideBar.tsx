@@ -8,18 +8,16 @@ type SidebarOption = {
   path: string;
 };
 
-const sidebarOptions: SidebarOption[] = [
-  { label: "Inbox", path: routePaths.inbox },
-  { label: "Sent", path: routePaths.sent },
-  { label: "Create New Message", path: routePaths.newMessage },
-];
+type SideBarProps = {
+  options: SidebarOption[];
+};
 
-const Sidebar = () => {
+const Sidebar = (props: SideBarProps) => {
   const currentPath = usePathname();
   return (
     <aside className="w-64 h-screen bg-gray-950 text-white flex flex-col p-6">
       <ul className="space-y-4">
-        {sidebarOptions.map((option) => (
+        {props.options.map((option) => (
           <li key={option.path}>
             <Link
               href={option.path}

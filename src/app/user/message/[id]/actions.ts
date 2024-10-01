@@ -1,7 +1,6 @@
 import { GetMessageResponse } from "@/app/api/message/[id]/types";
 import { apiFetch } from "@/app/utils/api";
 import { headers } from "next/headers";
-import { toast } from "react-hot-toast";
 
 export const fetchMessageById = async (messageId: number) => {
   try {
@@ -11,13 +10,13 @@ export const fetchMessageById = async (messageId: number) => {
       headers: headers(),
     });
     if (error) {
-      toast.error(error);
+      console.error(error);
     }
 
     return messageFromApi;
   } catch (error) {
     if (error instanceof Error) {
-      toast.error(error.message);
+      console.error(error.message);
       return undefined;
     }
   }

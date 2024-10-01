@@ -1,7 +1,6 @@
 import { GetSentMessagesResponse } from "@/app/api/sent/types";
 import { apiFetch } from "@/app/utils/api";
 import { headers } from "next/headers";
-import toast from "react-hot-toast";
 
 export const fetchSentMessages = async () => {
   try {
@@ -13,7 +12,7 @@ export const fetchSentMessages = async () => {
       });
 
     if (error) {
-      toast.error(error);
+      console.error(error);
     }
 
     if (messagesFromApi === undefined) return [];
@@ -26,7 +25,7 @@ export const fetchSentMessages = async () => {
     }));
   } catch (error) {
     if (error instanceof Error) {
-      toast.error(error.message);
+      console.error(error.message);
     }
 
     return [];

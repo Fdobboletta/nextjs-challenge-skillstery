@@ -5,7 +5,7 @@ import { apiFetch } from "@/app/utils/api";
 import { RegisterUserResponse } from "@/app/api/auth/register/types";
 import { routePaths } from "@/app/routePaths";
 import { InputField } from "@/components/InputField";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 type RegisterFormFields = {
   email: string;

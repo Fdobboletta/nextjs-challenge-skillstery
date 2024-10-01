@@ -3,7 +3,7 @@ import { CreateMessageResponse } from "@/app/api/message/types";
 import { apiFetch } from "@/app/utils/api";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 export type NewMessageFormFields = {
   receiverEmail: string;

@@ -3,7 +3,7 @@ import { PatchMessageResponse } from "@/app/api/message/[id]/types";
 import { apiFetch } from "@/app/utils/api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 type Messages = {
   id: number;

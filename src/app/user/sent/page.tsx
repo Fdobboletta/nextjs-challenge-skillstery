@@ -1,7 +1,7 @@
 import { MessageList } from "@/components/MessageList";
 import { fetchSentMessages } from "./actions";
 
-export const SentPage = async () => {
+export default async function SentPage() {
   const messagesForDisplay = await fetchSentMessages();
 
   return (
@@ -13,6 +13,4 @@ export const SentPage = async () => {
       canDelete={false}
     />
   );
-};
-
-export default SentPage;
+}

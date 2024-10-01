@@ -2,7 +2,7 @@ import { MessageList } from "@/components/MessageList";
 
 import { fetchInboxMessages } from "./actions";
 
-export const InboxPage = async () => {
+export default async function InboxPage() {
   const messagesForDisplay = await fetchInboxMessages();
 
   return (
@@ -14,6 +14,4 @@ export const InboxPage = async () => {
       canDelete
     />
   );
-};
-
-export default InboxPage;
+}

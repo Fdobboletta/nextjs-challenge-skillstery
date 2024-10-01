@@ -37,11 +37,11 @@ const sidebarOptions = [
   { label: "Create New Message", path: routePaths.newMessage },
 ];
 
-export const RootLayout = async ({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) => {
+}>) {
   const session = await getServerSession(authOptions);
   const isLoggedIn = session && session.user;
 
@@ -61,6 +61,4 @@ export const RootLayout = async ({
       </body>
     </html>
   );
-};
-
-export default RootLayout;
+}

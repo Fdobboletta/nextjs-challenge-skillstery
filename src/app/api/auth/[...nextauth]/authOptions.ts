@@ -47,7 +47,7 @@ export const authOptions: AuthOptions = {
   session: { strategy: "jwt" },
   pages: { signIn: routePaths.login },
   callbacks: {
-    session({ session, token }) {
+    async session({ session, token }) {
       // Adding userId to be accessible in session object
       session.user.id = token.sub || "";
       return session;
